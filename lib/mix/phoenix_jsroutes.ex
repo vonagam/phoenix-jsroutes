@@ -1,7 +1,7 @@
 defmodule PhoenixJsroutes do
 
   def function_name(%{helper: helper, opts: opts}) do
-    "#{helper}_#{opts}" |> Mix.Utils.camelize |> downcase_first
+    "#{helper}_#{opts}" |> Macro.camelize |> downcase_first
   end
 
   defp downcase_first(<< first :: utf8, rest :: binary>>) do

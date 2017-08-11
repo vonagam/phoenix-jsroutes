@@ -15,12 +15,13 @@ defmodule Mix.Tasks.Compile.Jsroutes do
     app               = Mix.Project.config[:app]
     app_env           = Application.get_env(app, :jsroutes) || Keyword.new
     output_folder     = Keyword.get(app_env, :output_folder, @default_out_folder)
+    output_file       = Keyword.get(app_env, :output_file, @default_out_file)
 
-    module = router(app, task_opts)
-    file = Path.join(output_folder, @default_out_file)
+    module = Keyword.get(app_env, :router) || router(app, task_opts)
+    file = Path.join(output_folder, output_file)
     mappings = [{module, file}]
 
-    Mix.Compilers.Phoenix.JsRoutes.compile(manifest, mappings, task_opts[:force], fn
+    Mix.Compilers.Phoenix.JsRoutes.compile(manifest(), mappings, task_opts[:force], fn
       module, output ->
         routes = routes(module, app_env)
         File.mkdir_p(Path.dirname(output))
